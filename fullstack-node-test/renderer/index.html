@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Notes App</title>
+</head>
+<body>
+  <h1>My Notes</h1>
+  <input id="noteInput" type="text" placeholder="Type a note..." />
+  <button id="addBtn">Add Note</button>
+  <ul id="notesList"></ul>
+
+  <script>
+    async function loadNotes() {
+      const notes = await window.api.getNotes();
+      const list = document.getElementById('notesList');
+      list.innerHTML = '';
+      notes.forEach(n => {
+        const li = document.createElement('li');
+        li.textContent = n.text;
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById('addBtn').addEventListener('click', async () => {
+      const input = document.getElementById('noteInput');
+      if (input.value.trim()) {
+        await window.api.addNote(input.value);
+        input.value = '';
+        loadNotes();
+      }
+    });
+
+    loadNotes();
+  </script>
+</body>
+</html>
